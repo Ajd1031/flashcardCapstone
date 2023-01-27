@@ -1,12 +1,14 @@
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { readDeck } from "../utils/api";
 import { updateCard } from "../utils/api";
 import { readCard } from "../utils/api";
+import FormComponent from "./FormComponent";
 
 function EditCard({ setDeckInfo, deckInfo }) {
   const history = useHistory();
   const [error, setError] = useState(null);
+  console.log(error)
   //deckId = id of the currnet deck
   const { deckId, cardId } = useParams();
   const abortController = new AbortController();
@@ -18,25 +20,27 @@ function EditCard({ setDeckInfo, deckInfo }) {
     deckId: Number(deckId),
   };
   const [updatedCard, setUpdatedCard] = useState(initialValues);
+  const {path} = useRouteMatch();
+  const whichForm = path.length;
 
   useEffect(() => {
+    async function getData(deckId) {
+      const abortController = new AbortController();
+      try {
+        const response = await readDeck(deckId, abortController.signal);
+        setDeckInfo(response);
+      } catch (error) {
+        setError(error);
+      }
+      return () => {
+        abortController.abort();
+      };
+    }
     setError(null);
     setDeckInfo({});
     getData(deckId);
-  }, [deckId]);
+  }, [deckId, setDeckInfo]);
 
-  async function getData(deckId) {
-    const abortController = new AbortController();
-    try {
-      const response = await readDeck(deckId, abortController.signal);
-      setDeckInfo(response);
-    } catch (error) {
-      setError(error);
-    }
-    return () => {
-      abortController.abort();
-    };
-  }
 
   useEffect(() => {
     setError(null);
@@ -92,27 +96,7 @@ function EditCard({ setDeckInfo, deckInfo }) {
       </div>
       <h2>{deckInfo.name}: Add Card</h2>
       <div>
-        <form>
-          <label>Front</label>
-          <textarea
-            name="front"
-            type="text"
-            placeholder={currentCard.front}
-            value={updatedCard.front}
-            onChange={handleChange}
-          />
-          <label>Back</label>
-          <textarea
-            name="back"
-            type="text"
-            placeholder={currentCard.back}
-            value={updatedCard.back}
-            onChange={handleChange}
-          />
-          <button onClick={handleCancel}>Cancel</button>
-          <button onClick={handleSubmit}>Submit</button>
-          <input style={{visibility: "hidden"}} value={currentCard.front} />
-        </form>
+        <FormComponent handleCancel={handleCancel} handleChangeEdit={handleChange} handleSubmit={handleSubmit} whichForm={whichForm} currentCard={currentCard} updatedCard={updatedCard} />
       </div>
     </div>
   );

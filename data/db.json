@@ -49,8 +49,8 @@
       "deckId": "3"
     },
     {
-      "front": "ITTTTT",
-      "back": "WOOORRKKSSS",
+      "front": "I messed it up",
+      "back": "reaaaaaallllllll bad",
       "id": 9,
       "deckId": 3
     },
@@ -65,6 +65,12 @@
       "back": "asdfkljsdflAS:LDKJFS:LDKJ",
       "id": 11,
       "deckId": 3
+    },
+    {
+      "front": "adddddinggggg",
+      "back": "aaaaaa varddddddd",
+      "deckId": 3,
+      "id": 12
     }
   ]
 }

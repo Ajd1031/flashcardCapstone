@@ -1,32 +1,35 @@
-import { useParams, Link, useRouteMatch } from "react-router-dom";
+import { useParams, Link} from "react-router-dom";
 import { readDeck } from "../utils/api";
 import React, { useEffect, useState } from "react";
 import DeckSide from "./DeckSide";
 
 function Study({ setDeckInfo, deckInfo }) {
   const [error, setError] = useState(null);
+  console.log(error)
 
   //deckId = id of the currnet deck
   const { deckId } = useParams();
 
   useEffect(() => {
+
+    async function getData(deckId) {
+      const abortController = new AbortController();
+      try {
+        const response = await readDeck(deckId, abortController.signal);
+        setDeckInfo(response);
+      } catch (error) {
+        setError(error);
+      }
+      return () => {
+        abortController.abort();
+      };
+    }
+    
     setError(null);
     setDeckInfo({});
     getData(deckId);
-  }, [deckId]);
+  }, [deckId, setDeckInfo]);
 
-  async function getData(deckId) {
-    const abortController = new AbortController();
-    try {
-      const response = await readDeck(deckId, abortController.signal);
-      setDeckInfo(response);
-    } catch (error) {
-      setError(error);
-    }
-    return () => {
-      abortController.abort();
-    };
-  }
 
   return (
     <div>

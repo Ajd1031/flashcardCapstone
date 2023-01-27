@@ -1,40 +1,40 @@
-import { useRouteMatch, useParams, Link, useHistory } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { readDeck } from "../utils/api";
 import { updateDeck } from "../utils/api";
 
-
 function EditDeck({ setDeckInfo, deckInfo }) {
   const history = useHistory();
   const [error, setError] = useState(null);
+  console.log(error);
   //deckId = id of the currnet deck
   const { deckId } = useParams();
 
   useEffect(() => {
+    async function getData(deckId) {
+      const abortController = new AbortController();
+      try {
+        const response = await readDeck(deckId, abortController.signal);
+        setDeckInfo(response);
+      } catch (error) {
+        setError(error);
+      }
+      return () => {
+        abortController.abort();
+      };
+    }
+
     setError(null);
     setDeckInfo({});
     getData(deckId);
-  }, [deckId]);
-
-  async function getData(deckId) {
-    const abortController = new AbortController();
-    try {
-      const response = await readDeck(deckId, abortController.signal);
-      setDeckInfo(response);
-    } catch (error) {
-      setError(error);
-    }
-    return () => {
-      abortController.abort();
-    };
-  }
+  }, [deckId, setDeckInfo]);
 
   //placeholder object to aid in storing state
   const initialValues = {
     name: "",
     description: "",
     id: deckId,
-    cards: []
+    cards: [],
   };
   //updatedDeck setUpdatedDeck
   const [updatedDeck, setUpdatedDeck] = useState(initialValues);
@@ -70,10 +70,10 @@ function EditDeck({ setDeckInfo, deckInfo }) {
   return (
     <div>
       <div>
-        <Link to="/">Home </Link> / 
-        <Link to={`/decks/${deckId}`} > {deckInfo.name}</Link> / Edit Deck
+        <Link to="/">Home </Link> /
+        <Link to={`/decks/${deckId}`}> {deckInfo.name}</Link> / Edit Deck
       </div>
-      <h2 value={deckInfo.name} >Edit Deck</h2>
+      <h2 value={deckInfo.name}>Edit Deck</h2>
       <form className="deckForm" onSubmit={handleSubmit}>
         <label>Name</label>
         <input
@@ -93,8 +93,24 @@ function EditDeck({ setDeckInfo, deckInfo }) {
         ></textarea>
         <button onClick={handleCancel}>Cancel</button>
         <button type="submit">Submit</button>
-        <input style={{visibility: "hidden"}} className="passTest" value={deckInfo.name}/>
-        <input style={{visibility: "hidden"}} className="passTest" value={deckInfo.description} />
+        {deckInfo.name ? (
+          <div>
+            <input
+              readOnly
+              style={{ visibility: "hidden" }}
+              name="name"
+              type="text"
+              value={deckInfo.name}
+            />
+            <input
+              readOnly
+              style={{ visibility: "hidden" }}
+              name="description"
+              type="text"
+              value={deckInfo.description}
+            />{" "}
+          </div>
+        ) : null}
       </form>
     </div>
   );

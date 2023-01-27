@@ -10,7 +10,7 @@ function DeckList({ decks, setDecks }) {
   useEffect(() => {
     const promise = listDecks();
     promise.then((decksFromAPI) => setDecks(decksFromAPI));
-  }, [decks.length]);
+  }, [decks.length, setDecks]);
 
   const deleteHandler = ({ target }) => {
     const abortController = new AbortController();

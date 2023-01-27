@@ -8,29 +8,32 @@ import { listDecks } from "../utils/api";
 function View({ setDeckInfo, deckInfo, setDecks }) {
   const history = useHistory();
   const [error, setError] = useState(null);
+  console.log(error)
   const { url } = useRouteMatch();
 
   //deckId = id of the currnet deck
   const { deckId } = useParams();
 
   useEffect(() => {
+
+    async function getData(deckId) {
+      const abortController = new AbortController();
+      try {
+        const response = await readDeck(deckId, abortController.signal);
+        setDeckInfo(response);
+      } catch (error) {
+        setError(error);
+      }
+      return () => {
+        abortController.abort();
+      };
+    }
+    
     setError(null);
     setDeckInfo({});
     getData(deckId);
-  }, [deckId]);
+  }, [deckId, setDeckInfo]);
 
-  async function getData(deckId) {
-    const abortController = new AbortController();
-    try {
-      const response = await readDeck(deckId, abortController.signal);
-      setDeckInfo(response);
-    } catch (error) {
-      setError(error);
-    }
-    return () => {
-      abortController.abort();
-    };
-  }
 
   //This gives the array of cards
   const { cards } = deckInfo;
