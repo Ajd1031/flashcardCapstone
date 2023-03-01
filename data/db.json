@@ -9,11 +9,6 @@
       "name": "React Router",
       "description": "React Rourter is a collection of navigational components that compose decalratively with your applicatoin ",
       "id": 2
-    },
-    {
-      "name": "PASSS",
-      "description": "THEEE TESTTT",
-      "id": 3
     }
   ],
   "cards": [
@@ -41,36 +36,6 @@
       "back": "b",
       "deckId": 1,
       "id": 7
-    },
-    {
-      "front": "asdfasdf",
-      "back": "asdfasdfasd",
-      "id": 8,
-      "deckId": "3"
-    },
-    {
-      "front": "I messed it up",
-      "back": "reaaaaaallllllll bad",
-      "id": 9,
-      "deckId": 3
-    },
-    {
-      "front": "where are this ",
-      "back": "going to end",
-      "deckId": 3,
-      "id": 10
-    },
-    {
-      "front": "This SLDKFJSDLF",
-      "back": "asdfkljsdflAS:LDKJFS:LDKJ",
-      "id": 11,
-      "deckId": 3
-    },
-    {
-      "front": "adddddinggggg",
-      "back": "aaaaaa varddddddd",
-      "deckId": 3,
-      "id": 12
     }
   ]
 }
